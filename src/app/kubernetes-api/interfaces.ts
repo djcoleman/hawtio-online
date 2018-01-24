@@ -4,7 +4,7 @@ interface SmokeSignals {
   convert(obj: any, handlers?: any);
 }
 
-interface EventEnabled {
+export interface EventEnabled {
   on(eventName: string, handler: Function);
   once(eventName: string, handler: Function);
   off(eventName: string, handler: Function);
@@ -15,7 +15,7 @@ export class Consts {
   get NAMESPACE_STORAGE_KEY(): string { return 'k8sSelectedNamespace'; }
 }
 
-export let constants = new Consts();
+export let Constants = new Consts();
 
 export interface ApiLocation {
   proto?: string;
