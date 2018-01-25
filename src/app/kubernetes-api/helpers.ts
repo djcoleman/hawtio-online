@@ -400,6 +400,10 @@ export function podStatus(pod) {
   return getStatus(pod);
 }
 
+export function getKey(kind: string, namespace?: string) {
+  return namespace ? namespace + '-' + kind : kind;
+}
+
 /**
  * Navigates the given set of paths in turn on the source object
  * and returns the last most value of the path or null if it could not be found.

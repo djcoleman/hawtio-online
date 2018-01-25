@@ -4,12 +4,16 @@ import { NavigationModule } from 'patternfly-ng';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { OpenshiftOauthModule } from './openshift-oauth/openshift-oauth.module';
+import { KubernetesApiModule } from './kubernetes-api/kubernetes-api.module';
 import { CoreModule } from './core/core.module';
 
 @NgModule({
   imports: [
     BrowserModule,
     NavigationModule,
+    OpenshiftOauthModule,
+    KubernetesApiModule,
     CoreModule,
     AppRoutingModule
   ],

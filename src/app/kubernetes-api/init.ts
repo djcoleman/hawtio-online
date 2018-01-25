@@ -10,7 +10,7 @@ declare var KeycloakConfig: any;
 /**
  * Depends on KubernetesApiInit()
  */
-export function KubernetesApiConfig() {
+export function KubernetesApiConfig(): void {
   Globals.K8S_PREFIX = trimLeading(pathGet(Globals.osConfig, ['api', 'k8s', 'prefix']) || Globals.K8S_PREFIX, '/');
   Globals.OS_PREFIX = trimLeading(pathGet(Globals.osConfig, ['api', 'openshift', 'prefix']) || Globals.OS_PREFIX, '/');
 }
@@ -19,7 +19,7 @@ export function KubernetesApiConfig() {
  * Since we're using jenkinshift in vanilla k8s, let's poll build configs by default.
  * Depends on KubernetesApiInit()
  */
-export function AddPolledTypes() {
+export function AddPolledTypes(): void {
   if (!Globals.isOpenShift) {
     pollingOnly.push(WatchTypes.BUILD_CONFIGS);
   }
@@ -29,33 +29,40 @@ export function AddPolledTypes() {
  * Detect if we're running against openshift or not.
  * Depends on KubernetesApiInit()
  */
-export function KubernetesAPIProviderInit() {
-  Globals.isOpenShift = false;
-  // probe /oapi/v1 as it's has all the openshift extensions
-  const testURL = new URI(Globals.masterUrl).segment('oapi/v1').toString();
-  $.ajax(<any>{
-    url: testURL,
-    method: 'GET',
-    success: (data) => {
-      console.log('data: ', data);
-      console.log('Backend is an openshift instance');
-      Globals.isOpenShift = true;
-    },
-    error: (jqXHR, textStatus, errorThrown) => {
-      console.log('Error probing ' + testURL + ' assuming backend is not an openshift instance.  Error details: status: ',
-        textStatus, ' errorThrown: ', errorThrown, ' jqXHR instance: ', jqXHR);
-    }
+export function KubernetesAPIProviderInit(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    Globals.isOpenShift = false;
+    // probe /oapi/v1 as it's has all the openshift extensions
+    const testURL = new URI(Globals.masterUrl).segment('oapi/v1').toString();
+    $.ajax(<any>{
+      url: testURL,
+      method: 'GET',
+      success: (data) => {
+        console.log('data: ', data);
+        console.log('Backend is an openshift instance');
+        Globals.isOpenShift = true;
+        resolve();
+      },
+      error: (jqXHR, textStatus, errorThrown) => {
+        console.log('Error probing ' + testURL + ' assuming backend is not an openshift instance.  Error details: status: ',
+          textStatus, ' errorThrown: ', errorThrown, ' jqXHR instance: ', jqXHR);
+        resolve();
+      }
+    });
   });
 }
 
-export function FetchConfig() {
-  $.getScript('osconsole/config.js')
-    .always(() => {
-      console.log('Fetched openshift config: ', window['OPENSHIFT_CONFIG']);
-      console.log('Fetched keycloak config: ', window['KeycloakConfig']);
-      OSOAuthConfig = _.get(window, 'OPENSHIFT_CONFIG.openshift');
-      GoogleOAuthConfig = _.get(window, 'OPENSHIFT_CONFIG.google');
-    });
+export function FetchConfig(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    $.getScript('osconsole/config.js')
+      .always(() => {
+        console.log('Fetched openshift config: ', window['OPENSHIFT_CONFIG']);
+        console.log('Fetched keycloak config: ', window['KeycloakConfig']);
+        OSOAuthConfig = _.get(window, 'OPENSHIFT_CONFIG.openshift');
+        GoogleOAuthConfig = _.get(window, 'OPENSHIFT_CONFIG.google');
+        resolve();
+      });
+  });
 }
 
 /**
