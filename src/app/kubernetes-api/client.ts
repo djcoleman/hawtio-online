@@ -1,11 +1,13 @@
+import * as _ from 'lodash';
+import * as URI from 'urijs';
+
+import { HawtioOAuth } from '../openshift-oauth/hawtio-oauth';
 import { Globals } from './globals';
 import {
   toKindName, getName, getKey, getNamespace, equals, getErrorObject, masterApiUrl, wsUrl, filterByLabel,
   prefixForKind, namespaced, toCollectionName, fullName, getKind, getApiVersion
 } from './helpers';
 import { EventEnabled, WatchActions, WatchTypes, Collection, K8SOptions, LabelMap, K8SClientFactory } from './interfaces';
-import * as _ from 'lodash';
-import * as URI from 'urijs';
 
 function beforeSend(request) {
   const token = HawtioOAuth.getOAuthToken();

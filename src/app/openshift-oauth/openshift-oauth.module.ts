@@ -1,14 +1,14 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { OpenshiftOauthService } from './openshift-oauth.service';
+import { initOpenshiftOAuth } from './init';
 
 @NgModule({
   imports: [
     CommonModule
   ],
   providers: [
-    OpenshiftOauthService
+    { provide: APP_INITIALIZER, useFactory: () => initOpenshiftOAuth, multi: true },
   ]
 })
 export class OpenshiftOauthModule { }

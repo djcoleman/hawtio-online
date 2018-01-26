@@ -10,7 +10,7 @@ declare var KeycloakConfig: any;
 /**
  * Depends on KubernetesApiInit()
  */
-export function KubernetesApiConfig(): void {
+export function kubernetesApiConfig(): void {
   Globals.K8S_PREFIX = trimLeading(pathGet(Globals.osConfig, ['api', 'k8s', 'prefix']) || Globals.K8S_PREFIX, '/');
   Globals.OS_PREFIX = trimLeading(pathGet(Globals.osConfig, ['api', 'openshift', 'prefix']) || Globals.OS_PREFIX, '/');
 }
@@ -19,7 +19,7 @@ export function KubernetesApiConfig(): void {
  * Since we're using jenkinshift in vanilla k8s, let's poll build configs by default.
  * Depends on KubernetesApiInit()
  */
-export function AddPolledTypes(): void {
+export function addPolledTypes(): void {
   if (!Globals.isOpenShift) {
     pollingOnly.push(WatchTypes.BUILD_CONFIGS);
   }
@@ -29,7 +29,7 @@ export function AddPolledTypes(): void {
  * Detect if we're running against openshift or not.
  * Depends on KubernetesApiInit()
  */
-export function KubernetesAPIProviderInit(): Promise<any> {
+export function kubernetesAPIProviderInit(): Promise<any> {
   return new Promise((resolve, reject) => {
     Globals.isOpenShift = false;
     // probe /oapi/v1 as it's has all the openshift extensions
@@ -52,7 +52,7 @@ export function KubernetesAPIProviderInit(): Promise<any> {
   });
 }
 
-export function FetchConfig(): Promise<any> {
+export function fetchConfig(): Promise<any> {
   return new Promise((resolve, reject) => {
     $.getScript('osconsole/config.js')
       .always(() => {
@@ -68,7 +68,7 @@ export function FetchConfig(): Promise<any> {
 /**
  * Depends on FetchConfig()
  */
-export function KubernetesApiInit() {
+export function kubernetesApiInit(): void {
   const config: KubernetesConfig = Globals.osConfig = window['OPENSHIFT_CONFIG'];
   console.log('Fetched OAuth config: ', config);
   let master: string = config.master_uri;
